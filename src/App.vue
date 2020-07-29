@@ -18,11 +18,9 @@
           Home
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-           <router-link to="/order" >Order</router-link> 
+           <router-link to="/" >Order</router-link> 
           <div class="dropdown-divider"></div>
-          <router-link to="/" >Data</router-link>
-          <div class="dropdown-divider"></div>
-           <div><router-link to="/edit" >Edit</router-link></div>
+          <router-link to="/data" >Data</router-link>
         </div>
       </li>
       <li class="nav-item">

@@ -9,7 +9,9 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var UserModel = require("./Model/userModel")
+var UserModel = require("./Model/userModel");
+var orderRouter = require("./routes/order");
+
 
 var app = express();
 
@@ -30,7 +32,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
+app.use('/order', orderRouter );
 
 //login
 app.post("/login",function(req,res,next){
@@ -47,55 +50,8 @@ app.post("/login",function(req,res,next){
   })
 })
 
-//hiển thị toàn bộ
-app.get("/",function(req,res,next){
-  UserModel.find().then(function(data){
-    res.json(data)
-  })
-})
 
 
-//thêm mới
-app.post("/",function(req,res,next){
-  var email = req.body.email
-  var password = req.body.password
-  UserModel.create({
-    email:email,
-    password:password,
-  }).then(function(data){
-    res.json({
-      err:false,
-      message:"đăng ký thành công"
-    })
-  })
-})
-//cập nhập
-app.put("/:id",function(req,res,next){
-  var id = req.params.id
-  var email = req.body.email
-  var password = req.body.password
-  UserModel.updateOne({
-    _id:id
-  },{
-    email:email,
-    password:password,
-  }).then(function(data){
-    res.json({
-      err:false,
-      message:"cập nhập thành công"
-    })
-  })
-})
-//xóa
-app.delete("/",function(req,res,next){
-  var id = req.params.id
-  UserModel.deleteOne({_id:id}).then(function(data){
-    res.json({
-      err:false,
-      message:"xóa thành công"
-    })
-  })
-  })
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -80,7 +80,7 @@
 
         <div>
           <label>Giới tính:</label>
-          <select v-model="sex" class="form-control">
+          <select v-model="gender" class="form-control">
             <option>Nam</option>
             <option>Nữ</option>
           </select>
@@ -131,16 +131,17 @@
   </div>
 </template>
 <script>
+import axios from "axios"
 export default {
   data() {
     return {
-      data: this.$store.state.data,
+      data:this.$store.state.data,
       amount: "",
       name: "",
       session: "",
       selected: "",
       data_text: "",
-      sex: "",
+      gender: "",
       choose: "",
       date: "",
       request: "",
@@ -149,13 +150,15 @@ export default {
         { text: "Trong Nhà", value: "A" },
         { text: "Ngoài Trời", value: "B" }
       ]
-    };
+      } 
   },
+   
   methods: {
     order() {
       // if (this.name === '' || this.amount === '' || this.session === '') {
       //   alert("Insert information");
       // } else {
+      var that = this
       let id = this.$store.state.data.length + 1;
       this.$store.dispatch("order", {
         id: id,
@@ -163,15 +166,37 @@ export default {
         amount: this.amount,
         session: this.session,
         place: this.selected,
-        sex: this.sex,
+        gender: this.gender,
         choose: this.choose,
         date: this.date,
         request: this.request,
         source: this.source
       });
-      this.$router.push("/");
+      this.$router.push("/data")
+      axios.post('http://localhost:3001/order', {
+            amount:that.amount,
+            session:that.session,
+            place:that.place,
+            name:that.name,
+            gender:that.gender,
+            date:that.date,
+            choose:that.choose,
+            request:that.request,
+            source:that.source,
+            totalPrice:that.totalPrice,
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
       }
-    }
+      
+    },
+  created(){
+   
+  }
   }
 // };
 </script>

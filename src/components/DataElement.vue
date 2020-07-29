@@ -1,36 +1,6 @@
 <template>
-  <div>
-      <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">STT</th>
-        <th scope="col">Số Người</th>
-        <th scope="col">Buổi</th>
-        <th scope="col">Nơi Tổ Chức</th>
-        <th scope="col">Tên Khách</th>
-        <th scope="col">Giới Tính</th>
-        <th scope="col">Ngày</th>
-        <th scope="col">Món</th>
-        <th scope="col">Yêu Cầu</th>
-        <th scope="col">Qua</th>
-        <th scope="col">Tổng Tiền</th>
-        <th scope="col">hành động</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <tr v-for="(item, index) in dataItem" :key="index">
-        <th scope="row">{{item.id}}</th>
-        <td>{{item.amount}}</td>
-        <td>{{item.session}}</td>
-        <td>{{item.place}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.gender}}</td>
-        <td>{{item.date}}</td>
-        <td>{{item.choose}}</td>
-        <td>{{item.request}}</td>
-        <td>{{item.source}}</td>
-        <td>{{item.totalPrice}}</td>
+
         <td>
           <button
             @click="edit(item)"
@@ -94,6 +64,7 @@
                         class="form-control"
                         id="recipient-name"
                       />
+                      <p>{{ item.name }} - {{ index }}</p>
                     </div>
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Giới tính:</label>
@@ -148,79 +119,32 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-danger" @click="deleteItem(item._id)">xóa</button>
+          <button type="button" class="btn btn-danger" @click="deleteItem(item)">xóa</button>
         </td>
-      </tr>
-    </tbody>
-  </table>
-    
 
-  </div>
 </template>
 <script>
-import axios from 'axios';
 
 export default {
-  data() {
-    return {
-      loading: true,
-      data: this.$store.state.data,
-      demo:this.$store.state.demo,
-      text: {
-        amount: "",
-        name: "",
-        session: "",
-        selected: "",
-        data_text: "",
-        gender: "",
-        choose: "",
-        date: "",
-        request: "",
-        source: "",
+    props:["item","index"],
+    data(){
+        return{
+            data:this.$store.state.data,
+          
+        }
+    },
+     methods: {
+        edit(item) {
+          console.log(item);
+          this.$store.dispatch("edit",item.id)
+        },
+        save(item) {
+          console.log(item);
+          this.$store.dispatch("save", this.text);
+        },
+        deleteItem(item) {
+          this.$store.dispatch("deleteItem", item);
+        },
       },
-    };
-  },
-    computed: {
-      dataItem () {
-        this.$store.dispatch("getAll")
-        return this.data;
-      }       
-    },
-  methods: {
-    edit(item) {
-      console.log(item);
-      this.$store.dispatch("edit",item)
-    },
-    save(item) {
-      console.log(item);
-      this.$store.dispatch("save", this.text);
-    },
-    deleteItem(id) {
-      axios.delete("http://localhost:3001/order/"+id)
-      .then(() => {
-        alert("đã xóa")
-        var newData = this.data.filter(item=>{
-          return item._id != id
-        })
-        this.$store.dispatch("setData", newData)
-        // window.location.href="http://localhost:3000/data"
-      })
-    },
-  },
-  mounted(){
-  
-    this.$store.dispatch("getAll")
-  
-  //   axios.get("http://localhost:3001/order")
-  //   .then(response => {
-  //     console.log(response);
-  //     this.data = response.data
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   })
-  //   .finally(() => this.loading = false)
-  }
-
-};
+}
 </script>
