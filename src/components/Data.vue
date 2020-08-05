@@ -160,12 +160,12 @@
 <script>
 import axios from 'axios';
 
+
 export default {
   data() {
     return {
       loading: true,
       data: this.$store.state.data,
-      demo:this.$store.state.demo,
       text: {
         amount: "",
         name: "",
@@ -180,21 +180,25 @@ export default {
       },
     };
   },
-    computed: {
-      dataItem () {
-        this.$store.dispatch("getAll")
-        return this.data;
-      }       
-    },
+  computed:{
+    dataItem(){
+        console.log(this.$store.state.data);
+      return this.$store.state.data
+    
+    }
+  },
   methods: {
     edit(item) {
       console.log(item);
       this.$store.dispatch("edit",item)
+      console.log(this.data);
     },
+
     save(item) {
       console.log(item);
       this.$store.dispatch("save", this.text);
     },
+
     deleteItem(id) {
       axios.delete("http://localhost:3001/order/"+id)
       .then(() => {
@@ -207,19 +211,11 @@ export default {
       })
     },
   },
-  mounted(){
-  
-    this.$store.dispatch("getAll")
-  
-  //   axios.get("http://localhost:3001/order")
-  //   .then(response => {
-  //     console.log(response);
-  //     this.data = response.data
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   })
-  //   .finally(() => this.loading = false)
+ 
+
+ 
+  created(){
+    this.$store.dispatch("loadData")   
   }
 
 };

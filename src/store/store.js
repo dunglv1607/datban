@@ -8,23 +8,25 @@ Vue.use(Vuex)
 
 const store= new Vuex.Store({
     state:{
-        data:[]
+        data:[],
+        loading: true
     },
+ 
+    getters:{
+        datas: state => {return state.data}
+    },
+    
     mutations:{
-        getAll(){
-            axios.get("http://localhost:3001/order")
-            .then(response => {
-                this.state.data =  response.data
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        loadData(state,data){
+           state.data= data;
         },
-        setData(newData){
-            this.state.data =  newData
+        changeLoadingState(state, loading) {
+            state.loading = loading
         },
+
+    
        edit(state,payload){
-           state.demo.push(payload)
+           state.data.push(payload)
 
        },
         order(state,order){
@@ -77,11 +79,16 @@ const store= new Vuex.Store({
         }
     },
     actions:{
-        getAll({commit}){
-            commit("getAll")
-        },
-        setData({commit}, newData){
-            commit("setData", newData)
+        loadData({commit}){
+            axios.get("http://localhost:3001/order")
+            .then(response => {
+                commit('loadData',response.data)
+                commit('changeLoadingState', false)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+           
         },
         order({commit},order){
             commit("order",order)
@@ -96,9 +103,6 @@ const store= new Vuex.Store({
         save({commit},payload){
             commit('save',payload)
         }
-    },
-    getters:{
-        datas: state => {return state.data}
     }
 })
 
