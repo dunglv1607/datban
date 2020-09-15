@@ -12,8 +12,17 @@
             id="exampleInputEmail1"
             placeholder="Nguyễn Văn A"
           />
-        </div>   
-
+        </div>
+  <div class="form-group">
+          <label for="exampleInputEmail1">Email Khách hàng</label>
+          <input
+            v-model="email"
+            type="text"
+            class="form-control"
+            id="exampleInputEmail1"
+            placeholder="abc@gmail.com"
+          />
+        </div>
         <div class="form-group">
           <label for="exampleInputEmail1">Số người</label>
           <input
@@ -130,7 +139,9 @@
   </div>
 </template>
 <script>
+// import axios from 'axios'
 import Header from './header'
+// import Cookies from "js-cookie"
 export default {
   components:{
     Header
@@ -138,6 +149,7 @@ export default {
   data() {
     return {
       data:this.$store.state.data,
+      email:"",
       amount: "",
       name: "",
       session: "",
@@ -157,12 +169,23 @@ export default {
    
   methods: {
     order() {
-      // if (this.name === '' || this.amount === '' || this.session === '') {
-      //   alert("Insert information");
-      // } else {
+    //    var that = this
+    // axios.post('/check-email', {
+    //   email: that.email
+    // })
+    // .then(function (response) {
+    //  console.log(response.data.token);
+
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    //   });
+
       let id = this.$store.state.data.length + 1;
+
       this.$store.dispatch("order", {
         id: id,
+        email: this.email,
         name: this.name,
         amount: this.amount,
         session: this.session,
@@ -171,10 +194,10 @@ export default {
         choose: this.choose,
         date: this.date,
         request: this.request,
-        source: this.source
+        source: this.source,
+
       });
         this.$router.push("/data")
-        // window.location.href="/data"
  
 
       }

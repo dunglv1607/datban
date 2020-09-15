@@ -1,9 +1,9 @@
 <template>
-  <div>
+   <div>
+     <Header></Header>
       <table class="table">
     <thead>
       <tr>
-        <th scope="col">STT</th>
         <th scope="col">Số Người</th>
         <th scope="col">Buổi</th>
         <th scope="col">Nơi Tổ Chức</th>
@@ -15,12 +15,13 @@
         <th scope="col">Qua</th>
         <th scope="col">Tổng Tiền</th>
         <th scope="col">hành động</th>
+        
       </tr>
     </thead>
 
     <tbody>
       <tr v-for="(item, index) in dataItem" :key="index">
-        <th scope="row">{{item.id}}</th>
+       
         <td>{{item.amount}}</td>
         <td>{{item.session}}</td>
         <td>{{item.place}}</td>
@@ -39,6 +40,7 @@
             data-toggle="modal"
             data-target="#exampleModal"
             data-whatever="@mdo"
+            data-backdrop="false"
           >Sửa</button>
 
           <div
@@ -62,7 +64,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Số Người:</label>
                       <input
-                        v-model="item.amount"
+                        placeholder="Số người tham gia"
+                        v-model="amount"
                         type="number"
                         class="form-control"
                         id="recipient-name"
@@ -71,7 +74,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Buổi:</label>
                       <input
-                        v-model="item.session"
+                        placeholder="Sáng,Trưa,Tối"
+                        v-model="session"
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -80,7 +84,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Nơi tổ chức:</label>
                       <input
-                        v-model="item.place"
+                        placeholder="Trong Nhà or Ngoài Trời"
+                        v-model="place"
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -89,7 +94,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Tên khách:</label>
                       <input
-                        v-model="item.name"
+                        placeholder="Nguyễn Văn A"
+                        v-model='name'
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -98,7 +104,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Giới tính:</label>
                       <input
-                        v-model="item.gender"
+                        placeholder="Nam or Nữ"
+                        v-model="gender"
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -107,7 +114,7 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Ngày:</label>
                       <input
-                        v-model="item.date"
+                        v-model="date"
                         type="date"
                         class="form-control"
                         id="recipient-name"
@@ -116,7 +123,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Món:</label>
                       <input
-                        v-model="item.choose"
+                        placeholder="Lẩu Bò,Lẩu Gà..."
+                        v-model="choose"
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -125,7 +133,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Yêu cầu:</label>
                       <input
-                        v-model="item.request"
+                        placeholder="Yêu cầu của khách hàng"
+                        v-model="request"
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -134,7 +143,8 @@
                     <div class="form-group">
                       <label for="recipient-name" class="col-form-label">Qua:</label>
                       <input
-                        v-model="item.source"
+                        v-model="source"
+                        placeholder="Facebook,Zalo...."
                         type="text"
                         class="form-control"
                         id="recipient-name"
@@ -143,80 +153,96 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button @click="save(item)" type="button" class="btn btn-primary">Save</button>
+                  <button @click="save(item)"  type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
                 </div>
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-danger" @click="deleteItem(item._id)">xóa</button>
+          <button type="button" class="btn btn-danger" @click="deleteItem(item)">xóa</button>
         </td>
       </tr>
     </tbody>
   </table>
-    
+   
 
   </div>
 </template>
+
+
 <script>
-import axios from 'axios';
-
-
+import axios from 'axios'
+import Header from './header'
 export default {
+    components:{
+      Header
+    },
   data() {
     return {
-      loading: true,
-      data: this.$store.state.data,
-      text: {
-        amount: "",
-        name: "",
-        session: "",
-        selected: "",
-        data_text: "",
-        gender: "",
-        choose: "",
-        date: "",
-        request: "",
-        source: "",
-      },
+    
+      amount: "",
+      name: "",
+      session: "",
+      place: "",
+      gender: "",
+      choose: "",
+      date: "",
+      request: "",
+      source: ""
+      
     };
   },
   computed:{
-    dataItem(){
-        console.log(this.$store.state.data);
-      return this.$store.state.data
-    
-    }
+    dataItem(){ 
+    return this.$store.state.data 
+    },
+
   },
   methods: {
     edit(item) {
-      console.log(item);
-      this.$store.dispatch("edit",item)
-      console.log(this.data);
+      this.$store.dispatch("edit",item._id)
     },
 
-    save(item) {
-      console.log(item);
-      this.$store.dispatch("save", this.text);
+    save() {
+      var id = this.$store.state.data.id
+      var data = {
+        id: id,
+        place: this.place,
+        amount: this.amount,
+        name: this.name,
+        session: this.session,
+        gender: this.gender,
+        choose: this.choose,
+        request: this.request,
+        date: this.date,
+        source: this.source,
+      }
+      this.$store.dispatch("save", data);
     },
 
-    deleteItem(id) {
-      axios.delete("http://localhost:3001/order/"+id)
+    deleteItem(item) {
+      axios.delete("http://localhost:3001/order/"+item._id)
       .then(() => {
         alert("đã xóa")
-        var newData = this.data.filter(item=>{
-          return item._id != id
-        })
-        this.$store.dispatch("setData", newData)
-        // window.location.href="http://localhost:3000/data"
+        this.$store.dispatch("loadData")
       })
     },
   },
  
-
- 
   created(){
-    this.$store.dispatch("loadData")   
+  this.$store.dispatch("loadData")
   }
 
 };
 </script>
+
+<style scoped>
+.modal-backdrop{
+    position:relative !important;
+}
+td{
+    color:black
+    }
+th{
+  color: red;
+}
+</style>
